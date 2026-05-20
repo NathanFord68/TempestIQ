@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: tempest_mongo 
+    restart: always
+    env_file:
+      - ./.env.${TEMPEST_ENV:-dev}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - tempest_data
+  
+  bootstrap:
+    image: tempest_db_bootstrap:latest
+    restart: no
+    env_file:
+     - ./.env.${TEMPEST_ENV:-dev}
+    networks:
+     - tempest_data
+    depends_on:
+      - mongodb
+
+networks:
+  tempest_data:
+    driver: bridge
+volumes:
+  mongo_data:
