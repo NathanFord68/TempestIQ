@@ -1,7 +1,7 @@
 const { MongoClient } = require("mongodb");
 
-const username = process.env.MONGO_USERNAME;
-const password = process.env.MONGO_PASSWORD;
+const username = process.env.MONGO_INITDB_ROOT_USERNAME;
+const password = process.env.MONGO_INITDB_ROOT_PASSWORD;
 const mongo_container_name = process.env.MONGO_CONTAINER_NAME;
 const database_name = process.env.DATABASE_NAME;
 
