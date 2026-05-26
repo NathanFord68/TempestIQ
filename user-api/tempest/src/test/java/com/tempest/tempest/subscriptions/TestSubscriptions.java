@@ -1,4 +1,4 @@
-package com.tempest.tempest.controllers;
+package com.tempest.tempest.subscriptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -15,8 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
-
-import com.tempest.tempest.Entities.Subscription;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ class SubscriptionControllerTest {
 
 
     // Mock database variables
-    MongoCollection<Subscription> dbCollection;
+    MongoCollection<SubscriptionEntity> dbCollection;
     MongoClient mongo;
     MongoDatabase db;
     
@@ -46,9 +44,9 @@ class SubscriptionControllerTest {
         mongo = PowerMockito.mock(MongoClient.class);
         db = PowerMockito.mock(MongoDatabase.class);
 
-        List<Subscription> mockSubscriptions = new ArrayList<Subscription>();
+        List<SubscriptionEntity> mockSubscriptions = new ArrayList<SubscriptionEntity>();
 
-        mockSubscriptions.add(new Subscription(
+        mockSubscriptions.add(new SubscriptionEntity(
             "jasonborn",
             "US", 
             "Tenessee", 
@@ -56,7 +54,7 @@ class SubscriptionControllerTest {
             10.00f, 
             20.0f
         ));
-        mockSubscriptions.add(new Subscription(
+        mockSubscriptions.add(new SubscriptionEntity(
             "jasonborn",
             "US", 
             "Virginia", 
@@ -64,7 +62,7 @@ class SubscriptionControllerTest {
             30.00f, 
             40.0f
         ));
-        mockSubscriptions.add(new Subscription(
+        mockSubscriptions.add(new SubscriptionEntity(
             "jasonborn",
             "US", 
             "Arizona", 
@@ -79,7 +77,7 @@ class SubscriptionControllerTest {
     @Test
     void shouldCreateSubscription() throws Exception {
 
-        Subscription subscriptionCreateObject = new Subscription(
+        SubscriptionEntity subscriptionCreateObject = new SubscriptionEntity(
             "nathforl",
             "US", 
             "Tenessee", 
@@ -122,7 +120,7 @@ class SubscriptionControllerTest {
     @Test
     void shouldReturnSubscriptionById() throws Exception {
 
-        Subscription subscriptionCreateObject = new Subscription(
+        SubscriptionEntity subscriptionCreateObject = new SubscriptionEntity(
             "nathforl",
             "US", 
             "Tenessee", 
@@ -157,7 +155,7 @@ class SubscriptionControllerTest {
     @Test
     void shouldUpdateSubscription() throws Exception {
 
-        Subscription subscriptionCreateObject = new Subscription(
+        SubscriptionEntity subscriptionCreateObject = new SubscriptionEntity(
             "nathforl",
             "US", 
             "Tenessee", 
@@ -166,7 +164,7 @@ class SubscriptionControllerTest {
             80.0f
         );
 
-        Subscription subscriptionUpdateObject = new Subscription(
+        SubscriptionEntity subscriptionUpdateObject = new SubscriptionEntity(
             "123456789",
             "nathforl",
             "US", 
