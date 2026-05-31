@@ -2,18 +2,14 @@ package com.tempest.tempest.subscriptions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.powermock.api.mockito.PowerMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 import java.util.List;
@@ -21,8 +17,7 @@ import java.util.ArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(SubscriptionController.class)
 class SubscriptionControllerTest {
 
     @Autowired
@@ -31,51 +26,13 @@ class SubscriptionControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    // Mock database variables
-    MongoCollection<SubscriptionEntity> dbCollection;
-    MongoClient mongo;
-    MongoDatabase db;
-    
-    @BeforeEach
-    @SuppressWarnings("unchecked")
-    void resetDatabase() {
-        dbCollection = PowerMockito.mock(MongoCollection.class);
-        mongo = PowerMockito.mock(MongoClient.class);
-        db = PowerMockito.mock(MongoDatabase.class);
-
-        List<SubscriptionEntity> mockSubscriptions = new ArrayList<SubscriptionEntity>();
-
-        mockSubscriptions.add(new SubscriptionEntity(
-            "jasonborn",
-            "US", 
-            "Tenessee", 
-            "Kingsport", 
-            10.00f, 
-            20.0f
-        ));
-        mockSubscriptions.add(new SubscriptionEntity(
-            "jasonborn",
-            "US", 
-            "Virginia", 
-            "Ashburn", 
-            30.00f, 
-            40.0f
-        ));
-        mockSubscriptions.add(new SubscriptionEntity(
-            "jasonborn",
-            "US", 
-            "Arizona", 
-            "Phoenix", 
-            70.00f, 
-            80.0f
-        ));
-
-        dbCollection.insertMany(mockSubscriptions);
-    }
+    @MockitoBean
+    private SubscriptionService subscriptionService;
 
     @Test
     void shouldCreateSubscription() throws Exception {
+
+        // TODO setup the when service call
 
         SubscriptionEntity subscriptionCreateObject = new SubscriptionEntity(
             "nathforl",
@@ -96,9 +53,16 @@ class SubscriptionControllerTest {
     }
 
     @Test
-    void shouldReturnAllSubscriptionsAsJson() {
+    void shouldReturnAllSubscriptionsAsJson() throws Exception{
+
+        String username = "jasonborn";
+
+        List<SubscriptionEntity> mockSubscriptions = new ArrayList<SubscriptionEntity>();
+
+        Mockito.doReturn(mockSubscriptions).when(subscriptionService).getAllSubscriptions(username);
+
         mockMvcTester.get()
-            .uri("/subscriptions")
+            .uri("/subscriptions/%s".formatted(username))
             .exchange()
             .assertThat()
             .hasStatusOk()
@@ -109,7 +73,7 @@ class SubscriptionControllerTest {
     @Test
     void shouldReturnAllSubscriptionsAsList(){
         mockMvcTester.get()
-            .uri("/subscriptions")
+            .uri("/subscriptions/jasonborn")
             .exchange()
             .assertThat()
             .bodyJson()
@@ -120,6 +84,35 @@ class SubscriptionControllerTest {
     @Test
     void shouldReturnSubscriptionById() throws Exception {
 
+        String username = "jasonborn";
+
+        List<SubscriptionEntity> mockSubscriptions = new ArrayList<SubscriptionEntity>();
+
+        Mockito.doReturn(mockSubscriptions).when(subscriptionService).getAllSubscriptions(username);
+
+        mockSubscriptions.add(new SubscriptionEntity(
+            "jasonborn", 
+            "US", 
+            "Tenessee", 
+            "Kingsport", 
+            -80.0f, 
+            70.0f));
+
+        mockSubscriptions.add(new SubscriptionEntity(
+            "jasonborn", 
+            "US", 
+            "California", 
+            "Victorville", 
+            70.0f, 
+            60.0f));
+
+        mockSubscriptions.add(new SubscriptionEntity(
+            "jasonborn", 
+            "US", 
+            "Idaho", 
+            "Boise", 
+            40.0f, 
+            40.0f));
         SubscriptionEntity subscriptionCreateObject = new SubscriptionEntity(
             "nathforl",
             "US", 

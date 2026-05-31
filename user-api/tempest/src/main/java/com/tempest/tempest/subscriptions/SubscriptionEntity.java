@@ -1,4 +1,4 @@
-package com.tempest.tempest.Entities;
+package com.tempest.tempest.subscriptions;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +8,8 @@ import javax.persistence.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Entity
-@Document(collection = "subscription")
-public class Subscription {
+@Document(collection = "subscriptions")
+public class SubscriptionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class Subscription {
     private float lat;
     private float lon;
 
-    public Subscription(
+    public SubscriptionEntity(
         String _id,
         String _user, 
         String _countryCode, 
@@ -38,7 +38,7 @@ public class Subscription {
             this.lat = _lat;
             this.lon = _lon;
     }
-    public Subscription(
+    public SubscriptionEntity(
         String _user, 
         String _countryCode, 
         String _province, 
